@@ -12,7 +12,7 @@ class Solution(object):
         '''
 
         return_index = [] #定义返回值
-        visited_item = {} #定义已经遍历过的元素
+        visited_item = {} #用字典存储已经遍历过的元素, 以加快搜索的速度
 
         #判断数组的长度是否小于1
         if len(nums) <= 1:

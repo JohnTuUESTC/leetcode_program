@@ -1,0 +1,117 @@
+#coding:gb2312
+'''
+leetcode Add Two Numbers
+'''
+
+# Definition for singly-linked list.
+class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+class Solution(object):
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+
+        #如果传入的两个链表均为空
+        if not l1 and not l2:
+            return None
+
+        #如果有某一个列表为空
+        if l1 and not l2:
+            return l1
+        elif not l1 and l2:
+            return l2
+
+        result_num = ListNode(0) #定义存储结果的类型
+        temp_result_num = result_num
+        jinwei_flag = 0 #表示是否有进位的情况
+
+        #处理两个链表相同长度的部分
+        while l1 and l2:
+            if jinwei_flag == 0:
+                temp_result_num.val = l1.val + l2.val
+            else:
+                temp_result_num.val = l1.val + l2.val + 1
+
+            #判断本次加法是否有进位的情况
+            if temp_result_num.val >= 10:
+                temp_result_num.val %= 10
+                jinwei_flag = 1
+            else:
+                jinwei_flag = 0
+
+            l1 = l1.next
+            l2 = l2.next
+
+            if l1 and l2:
+                new_node = ListNode(0)
+                temp_result_num.next = new_node
+                temp_result_num = temp_result_num.next
+
+        #l2较l1更长
+        if not l1 and l2:
+            while l2:
+                new_node = ListNode(0)
+                temp_result_num.next = new_node
+                temp_result_num = temp_result_num.next
+
+                #判断有无进位的情况
+                if jinwei_flag == 1:
+                    temp_result_num.val = l2.val + 1
+                else:
+                    temp_result_num.val = l2.val
+
+                if temp_result_num.val >= 10:
+                    temp_result_num.val %= 10
+                    jinwei_flag = 1
+                else:
+                    jinwei_flag = 0
+
+                l2 = l2.next
+
+        #l1较l2更长
+        if l1 and not l2:
+            while l1:
+                new_node = ListNode(0)
+                temp_result_num.next = new_node
+                temp_result_num = temp_result_num.next
+
+                #判断有无进位的情况
+                if jinwei_flag == 1:
+                    temp_result_num.val = l1.val + 1
+                else:
+                    temp_result_num.val = l1.val
+
+                if temp_result_num.val >= 10:
+                    temp_result_num.val %= 10
+                    jinwei_flag = 1
+                else:
+                    jinwei_flag = 0
+
+                l1 = l1.next
+
+        #如果两个列表结束，还有进位的情况
+        if not l1 and not l2 and jinwei_flag == 1:
+            new_node = ListNode(1)
+            temp_result_num.next = new_node
+            jinwei_flag = 0
+
+        return result_num
+
+if __name__ == '__main__':
+    l1 = ListNode(1)
+
+    l2 = ListNode(9)
+    l2.next = ListNode(9)
+
+    sol = Solution()
+    l3 = sol.addTwoNumbers(l1, l2)
+
+    while l3:
+        print(l3.val)
+        l3 = l3.next
