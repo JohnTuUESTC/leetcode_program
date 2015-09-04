@@ -1,0 +1,35 @@
+# -*- coding:gb2312 -*-
+"""
+leetcode Two Sum
+"""
+
+class Solution(object):
+    def twoSum(self, nums, target):
+        '''
+        :param nums:List[int]
+        :param target:int
+        :return:List[int]
+        '''
+
+        return_index = [] #定义返回值
+        visited_item = {} #定义已经遍历过的元素
+
+        #判断数组的长度是否小于1
+        if len(nums) <= 1:
+            return return_index
+
+        for i in range(len(nums)):
+            if (target - nums[i]) in visited_item:
+                return_index.append(visited_item[target - nums[i]]+1)
+                return_index.append(i+1)
+                return return_index
+            else:
+                visited_item[nums[i]] = i
+
+        return return_index
+
+
+if __name__ == '__main__':
+    sol = Solution()
+    index = sol.twoSum([0,4,3,0], 0)
+    print(index)
