@@ -1,0 +1,66 @@
+#coding:gb2312
+'''
+leetcode Zigzag Conversion
+'''
+
+from math import *
+
+class Solution(object):
+    def convert(self, s, numRows):
+        """
+        :type s: str
+        :type numRows: int
+        :rtype: str
+        """
+
+        #判断如果是空串的情况
+        if len(s) == 0:
+            return ""
+
+        #判断行数为1或0
+        if numRows == 0 or numRows == 1:
+            return s
+
+        zigzag_str = "" #定义返回的字符串
+        zigzag_list = [] #暂时存储字符的列表
+        for i in range(numRows):
+            zigzag_list.append([])
+
+        turn_flag = 0 #用于判断是正序向下行走还是逆序向上
+        index = 0
+        for i in range(len(s)):
+            #到了正序向下的最后一个位置
+            if index == numRows - 1 and turn_flag == 0:
+                zigzag_list[index].append(s[i])
+                turn_flag = 1
+                index -= 1
+                continue
+
+            #到了逆序向上的最后一个位置
+            if index == 0 and turn_flag == 1:
+                zigzag_list[index].append(s[i])
+                turn_flag = 0
+                index += 1
+                continue
+
+            #正序向下添加元素
+            if turn_flag == 0:
+                zigzag_list[index].append(s[i])
+                index += 1
+                continue
+
+            #逆序向上添加元素
+            if turn_flag == 1:
+                zigzag_list[index].append(s[i])
+                index -= 1
+                continue
+
+        #整合输出
+        for i in range(numRows):
+            zigzag_str += "".join(zigzag_list[i])
+
+        return zigzag_str
+
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.convert("ABC", 2))
