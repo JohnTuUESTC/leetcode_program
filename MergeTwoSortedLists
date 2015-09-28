@@ -1,0 +1,71 @@
+#coding:gb2312
+'''
+leetcode Merge Two Sorted Lists
+'''
+
+# Definition for singly-linked list.
+class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+class Solution(object):
+    def mergeTwoLists(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+
+        #如果两个链表均为空
+        if not l1 and not l2:
+            return l1
+
+        #如果两个链表有一个为空
+        if not l1:
+            return l2
+
+        if not l2:
+            return l1
+
+        #定义需要返回的链表
+        l = ListNode(None)
+        temp_l = l #指向返回的链表的指针
+
+        while l1 and l2:
+            #判断两个链表的当前值哪一个大
+            if l1.val <= l2.val:
+                temp_l.next = l1
+                temp_l = temp_l.next
+                l1 = l1.next
+            else:
+                temp_l.next = l2
+                temp_l = temp_l.next
+                l2 = l2.next
+
+        #判断是哪一个链表到达了结尾
+        if not l1 and l2:
+            temp_l.next = l2
+        else:
+            temp_l.next = l1
+
+        return l.next #将头结点去掉
+
+if __name__ == '__main__':
+    sol = Solution()
+    l1 = ListNode(1)
+    l1.next = ListNode(3)
+    temp_l1 = l1.next
+    temp_l1.next = ListNode(5)
+
+    l2 = ListNode(2)
+    l2.next = ListNode(4)
+    temp_l2 = l2.next
+    temp_l2.next = ListNode(6)
+
+    l = sol.mergeTwoLists(l1, l2)
+
+    while l:
+        print(l.val),
+        print('\t')
+        l = l.next
