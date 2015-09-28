@@ -1,0 +1,44 @@
+#coding:gb2312
+'''
+leetcode Container With Most Water
+'''
+
+class Solution(object):
+    def maxArea(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+
+        #如果输入的列表长度小于1
+        if len(height) < 1:
+            return
+
+        most_water = 0 #定义最大能够装水的面积
+
+        first = 0 #第一个点的位置
+        last = len(height) - 1 #第二个点的位置
+
+        while (first < last):
+
+            if height[first] < height[last]:
+                #计算本次的装水面积
+                temp_water = height[first]*(last - first)
+                if temp_water > most_water:
+                    most_water = temp_water
+
+                temp_first = first
+                while (first < last) and (height[temp_first] >= height[first]):
+                    first += 1
+
+            else:
+                #计算本次的装水面积
+                temp_water = height[last]*(last - first)
+                if temp_water > most_water:
+                    most_water = temp_water
+
+                temp_last = last
+                while (first < last) and (height[temp_last] >= height[last]):
+                    last -= 1
+
+        return most_water
