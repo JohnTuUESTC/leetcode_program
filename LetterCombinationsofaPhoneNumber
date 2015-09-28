@@ -1,0 +1,44 @@
+#coding:gb2312
+'''
+leetcode Letter Combiantions of a Phone Number
+'''
+
+from itertools import *
+
+class Solution(object):
+    def letterCombinations(self, digits):
+        """
+        :type digits: str
+        :rtype: List[str]
+        """
+
+        #将每一个数字所对应的字符串存储在一个字典中
+        number_str = {'0': [' '], '1': ['*'], '2': ['a', 'b', 'c'], '3': ['d', 'e', 'f'], '4': ['g', 'h', 'i'],
+                      '5': ['j', 'k', 'l'], '6': ['m', 'n', 'o'], '7': ['p', 'q', 'r', 's'],
+                      '8': ['t', 'u', 'v'], '9': ['w', 'x', 'y', 'z']}
+
+        #如果输入的字符串是一个空值
+        if not digits:
+            return []
+
+        #如果输入的字符串中只有一个字符
+        if len(digits) == 1:
+            return number_str[digits]
+
+        return_list = [] #定义需要返回的列表项
+
+        for i in range(len(digits)):
+            if i == 0:
+                return_list = number_str[digits[i]]
+            else:
+                temp_list = return_list
+                return_list = []
+                for item in product(temp_list, number_str[digits[i]]):
+                    return_list.append("".join(item))
+
+        return return_list
+
+if __name__ == '__main__':
+    sol = Solution()
+    l = sol.letterCombinations("23")
+    print(l)
