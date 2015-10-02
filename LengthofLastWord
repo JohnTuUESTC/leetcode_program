@@ -1,0 +1,49 @@
+#coding:gb2312
+'''
+leetcode Length of Last Word
+'''
+
+class Solution(object):
+    def lengthOfLastWord(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+
+        if len(s) == 0:
+            return 0
+        if len(s) == 1:
+            if s[0] == " ":
+                return 0
+            else:
+                return 1
+
+        first = -1 #记录最后一个单词的开始位置
+        last = -1 #记录最后一个单词的结束位置
+        index = 1
+        flag = 0 #表示是否含有非空格元素
+
+        while index < len(s):
+            if s[index] != " ":
+                flag = 1
+            if s[index - 1] == " " and s[index] != " ":
+                first = index
+            if s[index] == " " and s[index - 1] != " ":
+                last = index
+
+            index += 1
+
+        #表示该字符串中并没有空格或没有非空格元素
+        if first == -1 and last == -1:
+            if flag == 0:
+                return 0
+            else:
+                return len(s)
+        #表示该单词的尾部有空格，而前面没有
+        if first == -1 and last >= 0:
+            return last
+        #最后一个单词之后并没有空格
+        if first > last:
+            return len(s) - first
+
+        return last - first
