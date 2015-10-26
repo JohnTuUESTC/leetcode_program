@@ -1,0 +1,42 @@
+#coding:gb2312
+
+'''
+leetcode: Valid Palindrome
+'''
+
+class Solution(object):
+    def isPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+
+        if len(s) == 0:
+            return True
+
+        #表示扫描字符串的两个位置
+        first = 0
+        last = len(s) - 1
+
+        while(first < last):
+            #忽略掉不是字母的字符, 可能出现连续很多个字符都不是字母的情况出现
+            while ((not 'a' <= s[first] <= 'z') and (not 'A' <= s[first] <= 'Z') and (not '0' <= s[first] <= '9') and first + 1 < len(s)):
+                first += 1
+            while ((not 'a' <= s[last] <= 'z') and (not 'A' <= s[last] <= 'Z') and (not '0' <= s[last] <= '9') and last - 1 >= 0):
+                last -= 1
+
+            if(first > last):
+                break
+
+            #在忽略大小写的情况下，如果first指向的字符与last指向的字符不同
+            if (not s[first] == s[last]) and (not s[first] == s[last].lower()) and (not s[first] == s[last].upper()):
+                return False
+
+            first += 1
+            last -= 1
+
+        return True
+
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.isPalindrome("1a2"))
