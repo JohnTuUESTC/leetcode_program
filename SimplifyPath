@@ -1,0 +1,70 @@
+#coding:gb2312
+
+'''
+leetcode: Simplify Path
+'''
+
+class Solution(object):
+    def simplifyPath(self, path):
+        """
+        :type path: str
+        :rtype: str
+        """
+
+        first = 1 #表示当前扫描的位置
+        file_stack = [] #记录文件路径的信息
+        stack_index = -1 #记录栈头指针的位置
+
+        while(first < len(path)):
+            length = 0 #记录单词的长度
+
+            #如果是字符'/'，则跳过
+            if path[first] == '/':
+                first += 1
+                continue
+
+            #如果出现一个点的情况
+            if path[first] == '.':
+                if first + 2 < len(path) and path[first + 1] == '.' and path[first + 2] == '.':
+                    None
+                elif first + 2 < len(path) and path[first + 1] == '.' and path[first + 2] != '/':
+                    None
+                #如果出现返回上一级目录的情况
+                elif first + 1 < len(path) and path[first + 1] == '.':
+                    first += 2
+                    #对特殊情况的处理
+                    if stack_index >= 0:
+                        stack_index -= 1
+                        file_stack.pop()
+                    continue
+                elif first + 1 < len(path) and path[first + 1] != '/':
+                    None
+                #如果只是在当前目录的情况
+                else:
+                    first += 1
+                    continue
+
+            while (('A' <= path[first + length] <= 'Z' or 'a' <= path[first + length] <= 'z' or '0' <= path[first + length] <= '9' or path[first + length] == '.'  or path[first + length] == '_') and first + length + 1 < len(path)):
+                length += 1
+
+            if(('A' <= path[first + length] <= 'Z' or 'a' <= path[first + length] <= 'z' or '0' <= path[first + length] <= '9' or path[first + length] == '.' or path[first + length] == '_') and first + length + 1 == len(path)):
+                length += 1
+
+            stack_index += 1
+            file_stack.append(path[first : first + length])
+            first += length
+
+        #拼凑成文件路径
+        file_path = ''
+        if stack_index == -1:
+            return '/'
+        while stack_index != -1:
+            file_path = '/' + file_stack[stack_index] + file_path
+            stack_index -= 1
+
+        return file_path
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.simplifyPath('/..hidden'))
+
