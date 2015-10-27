@@ -1,0 +1,75 @@
+#coding:gb2312
+
+'''
+leetcode: Reverse Words in a String
+'''
+
+class Solution(object):
+    def reverseWords(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+
+        if len(s) == 0:
+            return ""
+
+        s_list = list(s) #python中字符串是不能被修改的
+
+        #去除位于头、尾的空格，以及中间多余的空格
+        i = 0
+        while i < len(s_list):
+            if i == 0 and s_list[i] == ' ':
+                del s_list[i]
+                continue
+            if i == len(s_list) - 1 and s_list[i] == ' ':
+                del s_list[i]
+                continue
+            if s_list[i] == ' ' and s_list[i + 1] == ' ':
+                del s_list[i]
+                continue
+            i += 1
+
+        if len(s_list) == 0:
+            return ""
+
+        blank_index = [] #记录字符串中空格的位置
+
+        for i in range(len(s_list)):
+            if s_list[i] == ' ':
+                blank_index.append(i)
+            i += 1
+
+        #翻转每一个单词
+        for i in range(len(blank_index)):
+            if i == 0:
+                first = 0
+                last = blank_index[i]
+            else:
+                first = blank_index[i - 1] + 1
+                last = blank_index[i]
+
+            s_list = self.reverseString(s_list, first, last - 1)
+
+        if len(blank_index) > 0:
+            s_list = self.reverseString(s_list, blank_index[len(blank_index) - 1] + 1, len(s_list) - 1)
+
+            #翻转整个字符串, 只有在之前翻转过了才需要翻转一次
+            s_list = self.reverseString(s_list, 0, len(s_list) - 1)
+
+        return "".join(s_list)
+
+
+    def reverseString(self, s_list, first, last):
+        while first < last:
+            temp = s_list[first]
+            s_list[first] = s_list[last]
+            s_list[last] = temp
+
+            first += 1
+            last -= 1
+        return s_list
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.reverseWords("hi!"))
