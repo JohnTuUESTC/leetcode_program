@@ -1,0 +1,52 @@
+#coding:gb2312
+'''
+leetcode: Count and Say
+'''
+
+from string import *
+
+class Solution(object):
+    def countAndSay(self, n):
+        """
+        :type n: int
+        :rtype: str
+        """
+        init_num = 1
+        if n - 1 == 0:
+            return str(init_num)
+        else:
+            return self.say(n - 1, init_num)
+
+    def say(self, num, n):
+        now_num = n % 10 #存储前一个数字
+        same_num = 1 #表示相同数字的个数
+        result_str = '' #表示结果字符串
+
+        n = (n - now_num) / 10
+
+        if n == 0:
+            result_str = str(same_num) + str(now_num) + result_str
+
+        while n != 0:
+            temp_num = n % 10
+
+            #如果该数字只出现了一次
+            if temp_num != now_num:
+                result_str = str(same_num) + str(now_num) + result_str
+                now_num = temp_num
+                same_num = 0
+            else:
+                same_num += 1
+                n = (n - now_num) / 10
+                if n == 0:
+                    result_str = str(same_num) + str(now_num) + result_str
+
+        if num - 1 == 0:
+            return result_str
+        else:
+            return self.say(num - 1, int(result_str))
+
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.countAndSay(5))
