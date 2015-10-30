@@ -1,0 +1,87 @@
+#coding:gb2312
+'''
+leetcode: Basic Calculator II
+'''
+
+class Solution(object):
+    def calculate(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+
+        if len(s) == 0:
+            return 0
+        if len(s) == 1:
+            return int(s)
+
+        num_stack = [] #存储还未处理的数字与运算符
+        first = 0 #表示当前扫描到的字符
+        last = 0
+
+        #先将字符串中的运算符和数字提取出来
+        while last < len(s):
+            #跳过空格
+            if s[last] == ' ':
+                first += 1
+                last += 1
+                continue
+            #如果是运算符，则直接压栈
+            elif s[last] == '+' or s[last] == '-':
+                num_stack.append(s[last])
+                first += 1
+                last += 1
+                continue
+            #先处理乘除法
+            elif s[last] == '*' or s[last] == '/':
+                flag = 0
+                if s[last] == '/':
+                    flag = 1
+
+                last += 1
+                #寻找到运算符的第二个数字
+                while s[last] == ' ':
+                    last += 1
+
+                #将第二个数字提取出来
+                first = last
+                while '0' <= s[last] <= '9' and last + 1 < len(s):
+                    last += 1
+                if '0' <= s[last] <= '9':
+                    last += 1
+
+                if flag == 0:
+                    num_stack[len(num_stack) - 1] *= int(s[first : last])
+                else:
+                    num_stack[len(num_stack) - 1] /= int(s[first : last])
+
+                first = last
+                continue
+
+            #将数字提取出来
+            while '0' <= s[last] <= '9' and last + 1 < len(s):
+                last += 1
+            if '0' <= s[last] <= '9':
+                last += 1
+
+            num_stack.append(int(s[first : last]))
+            first = last
+
+        if len(num_stack) == 1:
+            return num_stack[0]
+
+        #处理加法和减法
+        first = 1
+        result_num = num_stack[0]
+        while first < len(num_stack):
+            if num_stack[first] == '+':
+                result_num += num_stack[first + 1]
+            else:
+                result_num -= num_stack[first + 1]
+            first += 2
+
+        return result_num
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.calculate('2048'))
