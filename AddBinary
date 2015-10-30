@@ -1,0 +1,72 @@
+#coding:gb2312
+'''
+leetcode: Add Binary
+'''
+
+class Solution(object):
+    def addBinary(self, a, b):
+        """
+        :type a: str
+        :type b: str
+        :rtype: str
+        """
+
+        if len(a) == 0 and len(b) == 0:
+            return ""
+        elif len(a) == 0:
+            return b
+        elif len(b) == 0:
+            return a
+
+        a_index = len(a) - 1
+        b_index = len(b) - 1
+        #由于处理字符串不方便，将字符串转化为列表来进行处理
+        a_list = list(a)
+        b_list = list(b)
+        jinwei_flag = 0 #记录是否有进位情况发生
+        result_list = [] #存储结果字符列表
+
+        while a_index >= 0 and b_index >= 0:
+            if int(a_list[a_index]) + int(b_list[b_index]) + jinwei_flag >= 2:
+                result_list.append(str((int(a_list[a_index]) + int(b_list[b_index]) + jinwei_flag) % 2))
+                jinwei_flag = 1
+            else:
+                result_list.append(str((int(a_list[a_index]) + int(b_list[b_index]) + jinwei_flag)))
+                jinwei_flag = 0
+
+            a_index -= 1
+            b_index -= 1
+
+        #如果两个列表的长度相同
+        if len(a_list) == len(b_list) and jinwei_flag == 1:
+            jinwei_flag = 0
+            result_list.append('1')
+        #如果两个列表长度不一样
+        if len(a_list) > len(b_list):
+            for i in range(len(a_list) - len(b_list) - 1, -1, -1): #range函数中如果步长为负数，要写明
+                if int(a_list[i]) + jinwei_flag >= 2:
+                    result_list.append(str((int(a_list[i]) + jinwei_flag) % 2))
+                    jinwei_flag = 1
+                else:
+                    result_list.append(str(int(a_list[i]) + jinwei_flag))
+                    jinwei_flag = 0
+        else:
+            for i in range(len(b_list) - len(a_list) - 1, -1, -1):
+                if int(b_list[i]) + jinwei_flag >= 2:
+                    result_list.append(str((int(b_list[i]) + jinwei_flag) % 2))
+                    jinwei_flag = 1
+                else:
+                    result_list.append(str(int(b_list[i]) + jinwei_flag))
+                    jinwei_flag = 0
+
+        if jinwei_flag == 1:
+            result_list.append('1')
+
+        #将结果的列表合并成字符串
+        result_list.reverse()
+        return ''.join(result_list)
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.addBinary('1', '11'))
+
