@@ -1,0 +1,101 @@
+#coding:gb2312
+'''
+leetcode: Wildcard Matching
+'''
+
+
+'''
+以下是递归的方法，可惜超时，应该是正确的
+class Solution(object):
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+
+        #如果两个字符串已经被匹配完了
+        if len(s) == 0 and len(p) == 0:
+            return True
+
+        #如果某一个字符串只剩下'*'符号
+        if (len(s) == 1 and s == '*') or (len(p) == 1 and p == '*'):
+            return True
+
+        #如果当前字符是匹配的，则匹配余下的字符串
+        if len(s) > 0 and len(p) > 0 and (s[0] == p[0] or s[0] == '?' or p[0] == '?'):
+            return self.isMatch(s[1:len(s)], p[1:len(p)])
+
+        #如果'*'的后一个字符与另一个字符串的当前位置不匹配，则不跳过'*'
+        if len(s) > 1 and len(p) > 1 and s[0] == '*' and s[1] != p[1]:
+            return self.isMatch(s, p[1:len(p)])
+
+        #如果'*'之后的字符是相同的，可以选择结束'*'的匹配，也有可能不结束，这两种情况都要进行判断
+        if len(s) > 1 and len(p) > 1 and s[0] == '*' and s[1] == p[1]:
+            if self.isMatch(s[1:len(s)], p[1:len(p)]):
+                return True
+            elif self.isMatch(s, p[1:len(p)]):
+                return True
+
+        if len(s) > 1 and len(p) > 1 and p[0] == '*' and s[1] != p[1]:
+            return self.isMatch(s[1:len(s)], p)
+
+        if len(s) > 1 and len(p) > 1 and p[0] == '*' and s[1] == p[1]:
+            if self.isMatch(s[1:len(s)], p[1:len(p)]):
+                return True
+            elif self.isMatch(s[1:len(s)], p):
+                return True
+
+
+        return False
+'''
+
+class Solution(object):
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+
+        p += " " #在p字符串后添加一个空白字符，以防p的最后一个字符是'*'，或是s字符串的长度大于p字符串的长度而造成的越界问题
+        p_star = -1 #用于存储碰到p中的'*'字符时p遍历到的位置
+        temp_s = -1 #用于存储碰到p中的'*'字符时s遍历到的位置
+        s_index = 0
+        p_index = 0
+
+        #以s字符串为基准来匹配，换成p也是一样
+        while s_index < len(s):
+            if s[s_index] == p[p_index] or p[p_index] == '?':
+                s_index += 1
+                p_index += 1
+                continue
+
+            #当p碰到'*'时记录当前的位置，以便决定是匹配多少个s中的字符
+            if p[p_index] == '*':
+                p_star = p_index
+                temp_s = s_index
+                p_index += 1
+                continue
+
+            #若是不能正确地匹配，则将'*'匹配的字符扩大1
+            if p_star != -1:
+                p_index = p_star + 1
+                s_index = temp_s + 1
+                temp_s += 1
+                continue
+
+            return False
+
+        #判断最后是否还有连续的'*'
+        while p_index + 1 < len(p) and p[p_index] == '*':
+            p_index += 1
+
+        if p_index < len(p) and p[p_index] == '*':
+            p_index += 1
+
+        return p_index == len(p) - 1
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isMatch("abefcdgiescdfimde", "ab*cd?i*de"))
