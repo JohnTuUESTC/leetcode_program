@@ -1,0 +1,38 @@
+#coding:gb2312
+'''
+leetcode: Generate Parentheses
+'''
+
+class Solution(object):
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+
+        result_list = [] #存储结果的列表
+
+        if n == 0:
+            return []
+
+        self.generate(n, n, '', result_list)
+
+        return result_list
+
+    def generate(self, left, right, s, result_list):
+        #参数中left表示左括号的个数,right表示右括号的个数,s表示当前的字符串
+
+        #如果左括号与右括号都用完了
+        if left == 0 and right == 0:
+            result_list.append(s)
+
+        #如果左括号没有用完就可以继续使用左括号
+        if left > 0:
+            self.generate(left - 1, right, s + '(', result_list)
+
+        if right > 0 and left < right :
+            self.generate(left, right - 1, s + ')', result_list)
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.generateParenthesis(4))
