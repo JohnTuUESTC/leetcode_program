@@ -1,0 +1,53 @@
+#coding:gb2312
+'''
+leetcode: Edit Distance
+'''
+
+class Solution(object):
+    def minDistance(self, word1, word2):
+        """
+        :type word1: str
+        :type word2: str
+        :rtype: int
+        """
+
+        if len(word1) == 0 and len(word2) == 0:
+            return 0
+        if len(word1) == 0:
+            return len(word2)
+        if len(word2) == 0:
+            return len(word1)
+
+        edit_distance = [] #保存两个字符间的编辑距离
+
+        for i in range(len(word1) + 1):
+            temp = []
+            for j in range(len(word2) + 1):
+                if j == 0 and i > 0:
+                    temp.append(i)
+                elif i == 0 and j > 0:
+                    temp.append(j)
+                else:
+                    temp.append(0)
+            edit_distance.append(temp)
+
+        for i in range(1, len(word1) + 1):
+            for j in range(1, len(word2) + 1):
+                #将整体标号向后移动一位,为了空出含有0的标号
+                if word1[i - 1] == word2[j - 1]:
+                    edit_distance[i][j] = edit_distance[i - 1][j - 1]
+                else:
+                    edit_distance[i][j] = edit_distance[i - 1][j - 1] + 1
+
+                #表示删去word1的第i个字符
+                if edit_distance[i - 1][j] + 1 < edit_distance[i][j]:
+                    edit_distance[i][j] = edit_distance[i - 1][j] + 1
+                #表示在word2的第j个位置插入一个字符
+                if edit_distance[i][j - 1] + 1 < edit_distance[i][j]:
+                    edit_distance[i][j] = edit_distance[i][j - 1] + 1
+
+        return edit_distance[len(word1)][len(word2)]
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.minDistance('sea', 'ate'))
