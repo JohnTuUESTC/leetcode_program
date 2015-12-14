@@ -1,0 +1,86 @@
+#coding:gb2312
+'''
+leetcode: Minimum Window Substring
+'''
+
+import copy
+
+class Solution(object):
+    def minWindow(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+
+        if len(s) == 0 or len(t) == 0:
+            return ""
+
+        character_num = {} #记录字符串t中每个字符出现的个数
+        for i in range(len(t)):
+            if character_num.has_key(t[i]):
+                character_num[t[i]] += 1
+            else:
+                character_num[t[i]] = 1
+
+        temp_character_num = copy.deepcopy(character_num)
+
+        #记录字符串出现的第一个位置
+        first_index = 0
+        length = 0 #记录字符出现的长度
+        min_length = len(s) + 1
+        min_first_index = 0
+        min_last_index = -1
+
+        for i in range(len(s)):
+            #表示寻找到了某一字符
+            if temp_character_num.has_key(s[i]) and temp_character_num[s[i]] > 0:
+                if length == 0:
+                    length = 1
+                    first_index = i
+                else:
+                    length += 1
+                temp_character_num[s[i]] -= 1
+
+                #如果字符已经全部出现
+                if length == len(t):
+                    if i - first_index + 1 < min_length:
+                        min_first_index = first_index
+                        min_last_index = i
+                        min_length = i - first_index + 1
+
+                    temp_character_num[s[first_index]] += 1
+                    #将头指针向后移动到出现t中字符的第一个位置
+                    length -= 1
+                    while first_index <= i:
+                        first_index += 1
+                        if first_index < len(s) and temp_character_num.has_key(s[first_index]):
+                            break
+                continue
+
+            #如果某一位置的字符串有重复
+            if temp_character_num.has_key(s[i]) and temp_character_num[s[i]] == 0:
+                #将头指针移动当前位置字符后,第一次出现t中字符的位置
+                flag = -1
+                while first_index < i:
+                    if first_index < len(s) and temp_character_num.has_key(s[first_index]):
+                        if flag == 0:
+                            flag = 1
+                        if flag == 1:
+                            break
+                        temp_character_num[s[first_index]] += 1
+                        length -= 1
+                        if s[first_index] == s[i]:
+                            flag = 0
+                    first_index += 1
+                length += 1
+                temp_character_num[s[i]] -= 1
+
+        if min_first_index <= min_last_index:
+            return s[min_first_index : min_last_index + 1]
+        else:
+            return ""
+
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.minWindow("abcabdebac", "cda"))
