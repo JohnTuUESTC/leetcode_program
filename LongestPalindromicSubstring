@@ -1,0 +1,59 @@
+#coding:gb2312
+'''
+leetcode: Longest Palindromic Substring
+'''
+
+class Solution(object):
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        if len(s) == 0:
+            return 0
+
+        S_list = [] #用于存储处理后的字符串
+
+        #针对字符串进行加'$'和'#'的处理
+        S_list.append('$')
+        for i in range(len(s)):
+            S_list.append('#')
+            S_list.append(s[i])
+        S_list.append('#')
+
+        #调用Manacher算法
+        return self.Manacher(S_list)
+
+    def Manacher(self, S_list):
+        P = [] #存储以S_list中每一个字符为中心的回文串的长度
+        for i in range(len(S_list)):
+            P.append(0)
+
+        mx = 0 #存储最长回文子串的边界
+        id = 0 #最长回文子串的中心位置
+        for i in range(1, len(S_list)):
+            if mx > i:
+                if P[2 * id - i] < (mx - 1):
+                    P[i] = P[2 * id - i]
+                else:
+                    P[i] = mx - 1
+            else:
+                P[i] = 1
+
+            #试图扩大以i为中心的回文串的长度
+            while i + P[i] < len(S_list) and i - P[i] >= 0 and S_list[i + P[i]] == S_list[i - P[i]]:
+                P[i] += 1
+
+            #更改最长回文子串的长度以及中心信息
+            if P[i] + i > mx:
+                mx = P[i]
+                id = i
+            if mx == len(S_list) / 2:
+                return mx - 1
+
+        #求出最长回文子串的长度
+        return mx - 1
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.longestPalindrome('abba'))
