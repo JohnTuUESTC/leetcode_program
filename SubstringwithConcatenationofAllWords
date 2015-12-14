@@ -1,0 +1,76 @@
+#coding:gb2312
+
+'''
+leetcode: Substring with Contatenation of All Words
+'''
+
+import copy
+
+class Solution(object):
+    def findSubstring(self, s, words):
+        """
+        :type s: str
+        :type words: List[str]
+        :rtype: List[int]
+        """
+        '''
+        #Time Limit Exceeded
+        if len(s) == 0 or len(words) == 0:
+            return []
+
+        return_index = [] #保存符合要求的下标值
+        word_index = {} #存储每个单词起始位置的下标
+
+        for i in range(len(s)):
+            for j in range(len(words)):
+                if i + len(words[0]) <= len(s) and s[i : i + len(words[0])] == words[j]:
+                    word_index[i] = words[j]
+
+        #对字典中的每一项进行遍历,看是否有符合要求的值
+        for item in word_index.items():
+            first_index = item[0] #记录其始位置的下标
+            index = item[0] #记录当前的下标
+            word_list = [word_index[first_index]]
+
+            while word_index.has_key(index + len(words[0])):
+                word_list.append(word_index[index + len(words[0])])
+                index += len(words[0])
+                if word_list.sort() == words.sort():
+                    return_index.append(first_index)
+                    break
+
+        return return_index
+        '''
+        if len(s) == 0 or len(words) == 0:
+            return []
+
+        word_num = {} #存储words中每个单词出现的次数
+
+        for i in words:
+            if word_num.has_key(i):
+                word_num[i] += 1
+            else:
+                word_num[i] = 1
+
+        return_index = [] #保存符合要求的下标值
+        for i in range(0, len(s) - len(words) * len(words[0])):
+            index = i #表示当前下标
+            temp_word_num = copy.deepcopy(word_num)
+            word_used_num = 0
+
+            #如果当前单词出现在了words中,而且使用次数没有超过限制
+            while index + len(words[0]) < len(s) and temp_word_num.has_key(s[index : index + len(words[0])]) and temp_word_num[s[index : index + len(words[0])]] > 0:
+                temp_word_num[s[index : index + len(words[0])]] -= 1
+                word_used_num += 1
+                index += len(words[0])
+
+
+            #如果找到了符合要求的下标
+            if word_used_num == len(words):
+                return_index.append(i)
+
+        return return_index
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.findSubstring("barfoothefoobarman",["foo", "bar"]))
