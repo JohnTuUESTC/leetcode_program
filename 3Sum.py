@@ -21,7 +21,7 @@ class Solution(object):
 
         for i in range(len(nums)):
             target -= nums[i]
-            temp_nums = nums[i + 1:len(nums)] #新数只会从i后产生
+            temp_nums = nums[i + 1:len(nums)] #当nums[i]为负数时,新数只会从i后产生;若nums[i]为正数,则它之前就已经出现过了
             temp_result = self.twoSum(temp_nums, target)
 
             target += nums[i]
