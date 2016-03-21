@@ -27,81 +27,73 @@ class Solution(object):
         elif not l1 and l2:
             return l2
 
-        result_num = ListNode(0) #定义存储结果的类型
-        temp_result_num = result_num
         jinwei_flag = 0 #表示是否有进位的情况
+        result_list = l1 # 以l1作为返回值
+        pre_l1 = None
+        pre_l2 = None
 
         #处理两个链表相同长度的部分
         while l1 and l2:
             if jinwei_flag == 0:
-                temp_result_num.val = l1.val + l2.val
+                l1.val += l2.val
             else:
-                temp_result_num.val = l1.val + l2.val + 1
+                l1.val += l2.val + 1
 
             #判断本次加法是否有进位的情况
-            if temp_result_num.val >= 10:
-                temp_result_num.val %= 10
+            if l1.val >= 10:
+                l1.val %= 10
                 jinwei_flag = 1
             else:
                 jinwei_flag = 0
 
+            pre_l1 = l1
             l1 = l1.next
+            pre_l2 = l2
             l2 = l2.next
 
-            if l1 and l2:
-                new_node = ListNode(0)
-                temp_result_num.next = new_node
-                temp_result_num = temp_result_num.next
-
-        #l2较l1更长
-        if not l1 and l2:
-            while l2:
-                new_node = ListNode(0)
-                temp_result_num.next = new_node
-                temp_result_num = temp_result_num.next
-
-                #判断有无进位的情况
-                if jinwei_flag == 1:
-                    temp_result_num.val = l2.val + 1
-                else:
-                    temp_result_num.val = l2.val
-
-                if temp_result_num.val >= 10:
-                    temp_result_num.val %= 10
-                    jinwei_flag = 1
-                else:
-                    jinwei_flag = 0
-
-                l2 = l2.next
-
-        #l1较l2更长
-        if l1 and not l2:
-            while l1:
-                new_node = ListNode(0)
-                temp_result_num.next = new_node
-                temp_result_num = temp_result_num.next
-
-                #判断有无进位的情况
-                if jinwei_flag == 1:
-                    temp_result_num.val = l1.val + 1
-                else:
-                    temp_result_num.val = l1.val
-
-                if temp_result_num.val >= 10:
-                    temp_result_num.val %= 10
-                    jinwei_flag = 1
-                else:
-                    jinwei_flag = 0
-
-                l1 = l1.next
-
-        #如果两个列表结束，还有进位的情况
         if not l1 and not l2 and jinwei_flag == 1:
             new_node = ListNode(1)
-            temp_result_num.next = new_node
-            jinwei_flag = 0
+            pre_l1.next = new_node
 
-        return result_num
+        #l2较l1更长
+        elif not l1 and l2:
+            pre_l1.next = l2
+            while l2 and jinwei_flag == 1:
+                l2.val += 1
+
+                if l2.val == 10:
+                    l2.val = 0
+                    jinwei_flag = 1
+                else:
+                    jinwei_flag = 0
+
+                pre_l2 = l2
+                l2 = l2.next
+
+            #如果两个列表结束，还有进位的情况
+            if not l2 and jinwei_flag == 1:
+                new_node = ListNode(1)
+                pre_l2.next = new_node
+
+        #l1较l2更长
+        elif l1 and not l2:
+            while l1 and jinwei_flag == 1:
+                l1.val += 1
+
+                if l1.val == 10:
+                    l1.val = 0
+                    jinwei_flag = 1
+                else:
+                    jinwei_flag = 0
+
+                pre_l1 = l1
+                l1 = l1.next
+
+            if not l1 and jinwei_flag == 1:
+                new_node = ListNode(1)
+                pre_l1.next = new_node
+
+        return result_list
 
 if __name__ == '__main__':
     l1 = ListNode(1)
