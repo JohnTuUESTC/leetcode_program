@@ -16,27 +16,24 @@ class Solution(object):
         if len(strs) == 1:
             return strs[0]
 
-        min_length = 10000
+        common_prefix = strs[0] # 初始化前缀
 
-        #获取列表中最短长度的字符串
-        for i in range(len(strs)):
-            if len(strs[i]) < min_length:
-                min_length = len(strs[i])
+        # 不断地将前缀与列表中的字符串进行比较,不断地缩短其长度
+        for i in range(1, len(strs)):
+            if cmp(common_prefix, strs[i][0:len(common_prefix)]) != 0:
+                temp_length = len(common_prefix)
+                length = 1
+                while len(common_prefix) - length > 0:
+                    if cmp(common_prefix[0:len(common_prefix) - length], strs[i][0:len(common_prefix) - length]) == 0:
+                        common_prefix = common_prefix[0:len(common_prefix) - length]
+                        break
+                    length += 1
 
-        common_prefix = "" #初始化前缀
-        prefix_length = 0 #表示前缀的长度
-
-        while True:
-            if prefix_length <= min_length:
-                temp_common_prefix = strs[0][0: prefix_length + 1]
-
-                for i in range(1, len(strs)):
-                    if temp_common_prefix != strs[i][0: prefix_length + 1]:
-                        return common_prefix
-
-                common_prefix = temp_common_prefix
-                prefix_length += 1
-            else:
-                break
+                if temp_length == length:
+                    return ""
 
         return common_prefix
+
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.longestCommonPrefix(["aa","ab"]))
