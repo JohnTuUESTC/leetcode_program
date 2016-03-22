@@ -16,23 +16,16 @@ class Solution(object):
             return True
 
         if x > 0:
-            temp_x = copy.deepcopy(x)
+            x_str = str(x)
         else:
             return False
 
-        x_reverse = 0
-
-        #通过倒序获取原数的每一位来重构出原数
-        while temp_x > 0:
-            x_reverse *= 10
-            x_reverse += temp_x % 10
-            temp_x /= 10
-
-        if x_reverse == x:
+        temp_x_str = x_str[::-1] # 将字符串进行翻转
+        if x_str == temp_x_str:
             return True
-
-        return False
+        else:
+            return False
 
 if __name__ == "__main__":
     sol = Solution()
-    print(sol.isPalindrome(12321))
+    print(sol.isPalindrome(1221))
