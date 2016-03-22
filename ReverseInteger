@@ -17,32 +17,25 @@ class Solution(object):
         #判断输入数字是否为负数
         negative_flag = 0
         if x < 0:
-            negative_flag = 1
+            negative_flag = True
+            x = -x
 
-        #将数字转换为字符串
-        num_str = str(x)
+        reversed_num = 0 # 存储逆序的数字
 
-        #将数字逆序
-        reversed_num = 0
-        for i in range(len(num_str)-1, -1, -1):
-            if negative_flag == 1 and i == 0:
-                continue
+        while x > 0:
+            current_num = x % 10
 
-            if negative_flag == 1:
-                #判断是否有越界的情况
-                if 2147483648 - reversed_num < (ord(num_str[i]) - 48)*int(pow(10, i - 1)):
-                    return 0
-                else:
-                    reversed_num += (ord(num_str[i]) - 48)*int(pow(10, i - 1))
+            temp = reversed_num * 10
 
-            else:
-                #判断是否有越界的情况
-                if 2147483647 - reversed_num < (ord(num_str[i]) - 48)*int(pow(10, i)):
-                    return 0
-                else:
-                    reversed_num += (ord(num_str[i]) - 48)*int(pow(10, i))
+            if negative_flag and 2147483648 - temp < current_num:
+                return 0
+            elif not negative_flag and 2147483647 - temp < current_num:
+                return 0
 
-        if negative_flag == 1:
+            reversed_num = temp + current_num
+            x /= 10
+
+        if negative_flag:
             return -reversed_num
         else:
             return reversed_num
