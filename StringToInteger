@@ -23,48 +23,48 @@ class Solution(object):
         if len(new_str) == 0:
             return 0
 
-        #判断首个字符是否为负号或是正号
-        negative_flag = 0
-        positive_flag = 0
+        #判断首个字符是否为负号
+        negative_flag = False
         if new_str[0] == '-':
-            negative_flag = 1
-        if new_str[0] == '+':
-            positive_flag = 1
+            #判断字符中是否只有负号
+            if len(new_str) == 1:
+                return 0
 
-        #判断数字字符出现的范围
-        end_position = 0
-        for i in range(len(new_str)):
-            if (negative_flag == 1  or positive_flag == 1) and i == 0:
-                end_position += 1
-                continue
-            if '0' <= new_str[i] <= '9':
-                end_position += 1
-                continue
-            else:
-                break
+            negative_flag = True
+            new_str = new_str[1:len(new_str)]
+        elif new_str[0] == "+":
+            if len(new_str) == 1:
+                return 0
 
-        #如果字符的开始不包含任何数字
-        if end_position == 0:
-            return 0
+            new_str = new_str[1:len(new_str)]
 
         #将字符转换为数字
         result = 0
-        for i in range(end_position):
-            if (negative_flag == 1 or positive_flag) and i == 0:
-                continue
+        for i in range(len(new_str)):
+            current_num = ord(new_str[i]) - 48
 
-            #判断是否越界
-            if negative_flag == 1 and 2147483648 - result < (ord(new_str[i]) - 48)*int(pow(10, end_position - i - 1)):
-                return -2147483648
-            elif negative_flag == 0 and 2147483647 - result < (ord(new_str[i]) - 48)*int(pow(10, end_position - i - 1)):
-                return 2147483647
-            result += (ord(new_str[i]) - 48)*int(pow(10, end_position - i - 1))
+            if 0 <= current_num <= 9:
+                result *= 10
 
-        if negative_flag == 1:
+                #判断是否越界
+                if negative_flag and 2147483648 - result < current_num:
+                    return -2147483648
+                elif not negative_flag and 2147483647 - result < current_num:
+                    return 2147483647
+
+                result += current_num
+
+            else:
+                if negative_flag:
+                    return -result
+                else:
+                    return  result
+
+        if negative_flag:
             return -result
         else:
             return  result
 
 if __name__ == '__main__':
     sol = Solution()
-    print(sol.myAtoi("-2147483648"))
+    print(sol.myAtoi("123"))
