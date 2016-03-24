@@ -19,45 +19,45 @@ class Solution(object):
 
         nums.sort()
 
-        for i in range(len(nums)):
+        for i in range(0, len(nums) - 2):
+            if nums[i] > 0:
+                break
+
+            if i > 0 and nums[i] == nums[i - 1]: # 说明这个解已经在之前出现过了
+                continue
+
             target -= nums[i]
-            temp_nums = nums[i + 1:len(nums)] #当nums[i]为负数时,新数只会从i后产生;若nums[i]为正数,则它之前就已经出现过了
-            temp_result = self.twoSum(temp_nums, target)
+
+            first = i + 1
+            last = len(nums) - 1
+            temp_result = []
+
+            while first < last:
+                while i + 1 < first <= len(nums) - 1 and nums[first] == nums[first - 1]:
+                    first += 1
+
+                while 0 <= last < len(nums) - 1 and nums[last] == nums[last + 1]:
+                    last -= 1
+
+                if first < last:
+                    temp = nums[first] + nums[last]
+                    if temp > target:
+                        last -= 1
+                    elif temp < target:
+                        first += 1
+                    else:
+                        temp_list = []
+                        temp_list.append(nums[i])
+                        temp_list.append(nums[first])
+                        temp_list.append(nums[last])
+                        result.append(temp_list)
+                        first += 1
+                        last -= 1
 
             target += nums[i]
-            for j in temp_result:
-                j.append(nums[i])
-                j.sort()
-                if j not in result:
-                    result.append(j)
 
         return result
 
-    def twoSum(self, nums, target):
-        '''
-        :param nums:List[int]
-        :param target:int
-        :return:List[int]
-        '''
-
-        return_index = [] #定义返回值
-        visited_item = {} #用字典存储已经遍历过的元素, 以加快搜索的速度
-
-        #判断数组的长度是否小于1
-        if len(nums) <= 1:
-            return return_index
-
-        for i in range(len(nums)):
-            if (target - nums[i]) in visited_item:
-                temp = []
-                temp.append(nums[visited_item[target - nums[i]]])
-                temp.append(nums[i])
-                return_index.append(temp)
-            else:
-                visited_item[nums[i]] = i
-
-        return return_index
-
 if __name__ == "__main__":
     sol = Solution()
-    print(sol.threeSum([-1,0,1,2,-1,-4]))
+    print(sol.threeSum([0,0,0]))
