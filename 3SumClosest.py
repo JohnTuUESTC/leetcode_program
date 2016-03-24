@@ -10,7 +10,7 @@ class Solution(object):
         :type target: int
         :rtype: int
         """
-
+        '''
         if len(nums) <= 3:
             return sum(nums)
 
@@ -64,7 +64,6 @@ class Solution(object):
                     min_index = i
                 i -= 1
 
-            i -= 1
             if i > first and abs(target - nums[i]) <= min_target:
                 min_target = abs(target - nums[i])
                 min_index = i
@@ -82,12 +81,39 @@ class Solution(object):
 
                 i += 1
 
-            i += 1
             if i < last and abs(target - nums[i]) <= min_target:
                 min_target = abs(target - nums[i])
                 min_index = i
 
             return min_index
+        '''
+        if len(nums) <= 3:
+            return sum(nums)
+
+        nums.sort()
+
+        closest_target = nums[0] + nums[1] + nums[2] #存储与目标值最接近的和
+
+        if closest_target == target:
+            return target
+
+        for i in range(len(nums) - 2):
+            j = i + 1
+            k = len(nums) - 1
+            while j < k:
+                temp_sum = nums[i] + nums[j] + nums[k]
+                if temp_sum == target:
+                    return target
+                if abs(temp_sum - target) < abs(target - closest_target):
+                    closest_target = temp_sum
+
+                if temp_sum < target:
+                    j += 1
+                else:
+                    k -= 1
+
+        return closest_target
+
 
 if __name__ == "__main__":
     sol = Solution()
