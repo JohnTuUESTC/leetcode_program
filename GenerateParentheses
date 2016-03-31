@@ -30,9 +30,9 @@ class Solution(object):
         if left > 0:
             self.generate(left - 1, right, s + '(', result_list)
 
-        if right > 0 and left < right :
+        if right > left:
             self.generate(left, right - 1, s + ')', result_list)
 
 if __name__ == '__main__':
     sol = Solution()
-    print(sol.generateParenthesis(4))
+    print(sol.generateParenthesis(3))
