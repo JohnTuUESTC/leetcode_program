@@ -15,43 +15,46 @@ class Solution(object):
         :type head: ListNode
         :rtype: ListNode
         """
-
-        #如果链表为空
-        if not head:
+        '''
+        #如果链表为空,或链表中只有一个结点
+        if not head or not head.next:
             return head
 
-        #如果链表中只有一个结点
-        if not head.next:
-            return head
+        # 提前存储链表的头结点
+        new_head = head.next
 
+        pre = None
         now = head
         next = head.next
 
-        #交换相邻两个结点的位置
-        now.next = next.next
-        next.next = now
-        head = next
-
-        while True:
-            pre = None
-
-            #如果遍历完了整个链表
-            if not now.next:
-                return head
-            else:
-                pre = now
-                now = now.next
-
-            #如果最后只剩一个元素
-            if not now.next:
-                return head
-            else:
-                next = now.next
+        while now and next:
 
             #交换相邻两个结点的位置
             now.next = next.next
             next.next = now
-            pre.next = next
+
+            if pre:
+                pre.next = next
+
+            # 如果now之后没有元素,可以提前退出了
+            if not now.next:
+                break
+
+            next = now.next.next
+            pre = now
+            now = now.next
+
+        return new_head
+        '''
+        # 奇技淫巧
+        temp = head # 这里赋值为head是为了防止最后剩单个元素的情况
+
+        if head and head.next:
+            temp = head.next
+            head.next = self.swapPairs(temp.next)
+            temp.next = head
+
+        return temp
 
 if __name__ == "__main__":
     sol = Solution()
