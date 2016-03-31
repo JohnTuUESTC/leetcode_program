@@ -18,7 +18,7 @@ class Solution(object):
         :type k: int
         :rtype: ListNode
         """
-
+        '''
         if head == None or k == 0 or k == 1:
             return head
 
@@ -82,6 +82,70 @@ class Solution(object):
             temp_k = k - 1
 
         return head
+        '''
+
+        '''
+        element = []
+        first = head
+        element.append(first.val)
+        last = first.next
+
+        while last:
+            element.append(last.val)
+
+            if len(element) == k:
+                # 交换每一个结点中的元素
+                element.reverse()
+                for i in range(k):
+                    first.val = element[i]
+                    first = first.next
+
+                element = []
+                if first:
+                    element.append(first.val)
+                    last = first.next
+                else:
+                    break
+            else:
+                last = last.next
+
+        return head
+        '''
+
+        if not head:
+            return head
+
+        new_head = ListNode(0)
+        new_head.next = head
+
+        pre = new_head
+        cur = new_head.next
+
+        while self.hasKNode(cur, k):
+            # 将k个结点逆序,有点像轮转的意思
+            for i in range(k - 1):
+                temp = pre.next
+                pre.next = cur.next
+                cur.next = cur.next.next
+                pre.next.next = temp
+
+            #这时cur这个结点已经到了最后
+            pre = cur
+            cur = cur.next
+
+        return new_head.next
+
+    def hasKNode(self, head, k):
+        #判断当前链表是否还有k个结点
+
+        index = 0
+        while head:
+            index += 1
+            if index == k:
+                return True
+            head = head.next
+
+        return False
 
 if __name__ == "__main__":
     node_1 = ListNode(1)
