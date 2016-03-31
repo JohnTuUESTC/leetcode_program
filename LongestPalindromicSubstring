@@ -9,9 +9,37 @@ class Solution(object):
         :type s: str
         :rtype: str
         """
-        if len(s) == 0:
-            return 0
 
+        if len(s) == 0 or len(s) == 1:
+            return s
+
+        max_length = 1 # 存储最大长度的回文字符串
+        start = 0 # 存储字符串的起始位置
+        i = 0
+
+        while i < len(s):
+            # 以i为中心扩展回文字符串
+            j = i
+            k = i
+
+            # 与中心字符相同的字符肯定出现在回文字符串中,所以要将边界后移
+            i += 1
+            while i < len(s) and s[i] == s[k]:
+                i += 1
+
+            k = i - 1
+
+            while j > 0 and k < len(s) - 1 and s[j - 1] == s[k + 1]:
+                j -= 1
+                k += 1
+
+            if k - j + 1 > max_length:
+                max_length = k - j + 1
+                start = j
+
+        return s[start:start + max_length]
+
+        '''
         S_list = [] #用于存储处理后的字符串
 
         #针对字符串进行加'$'和'#'的处理
@@ -53,7 +81,7 @@ class Solution(object):
 
         #求出最长回文子串的长度
         return mx - 1
-
+        '''
 if __name__ == '__main__':
     sol = Solution()
-    print(sol.longestPalindrome('abba'))
+    print(sol.longestPalindrome('bb'))
