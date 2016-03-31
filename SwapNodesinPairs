@@ -46,6 +46,8 @@ class Solution(object):
 
         return new_head
         '''
+
+        '''
         # 奇技淫巧
         temp = head # 这里赋值为head是为了防止最后剩单个元素的情况
 
@@ -55,6 +57,15 @@ class Solution(object):
             temp.next = head
 
         return temp
+        '''
+        # 非常漂亮
+        pre, pre.next = self, head
+        while pre.next and pre.next.next:
+            a = pre.next
+            b = a.next
+            pre.next, b.next, a.next = b, a, b.next
+            pre = a
+        return self.next
 
 if __name__ == "__main__":
     sol = Solution()
