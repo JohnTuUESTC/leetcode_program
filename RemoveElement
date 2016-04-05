@@ -10,32 +10,18 @@ class Solution(object):
         :type val: int
         :rtype: int
         """
-        
-        if len(nums) == 0:
-            return 0
 
-        first = 0 #表示当前所遍历到的位置
-        last = len(nums) - 1
-        delete_item = 0
+        index = 0
 
-        while first <= last:
-            while nums[last] == val and last >= 0:
-                last -= 1
-                delete_item += 1
-            #如果有需要删除的元素
-            if nums[first] == val and first < last:
-                temp = nums[first]
-                nums[first] = nums[last]
-                nums[last] = nums[first]
-                last -= 1
-                delete_item += 1
+        for i in range(len(nums)):
+            if nums[i] != val:
+                nums[index] = nums[i]
+                index += 1
 
-            first += 1
-
-        return len(nums) - delete_item
-
-
+        return index
 
 if __name__ == '__main__':
     sol = Solution()
-    print(sol.removeElement([1,2,3,4], 2))
+    temp = [3,2,2,3]
+    print(sol.removeElement(temp, 3)),
+    print(temp)
