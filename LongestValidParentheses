@@ -10,7 +10,7 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-
+        '''
         if len(s) == 0 or len(s) == 1:
             return 0
 
@@ -34,6 +34,21 @@ class Solution(object):
                     if j + 1 < len(s):
                         length[i] += length[j + 1]
         return max(length)
+        '''
+        if len(s) == 0 or len(s) == 1:
+            return 0
+
+        stack = [] # 用于模拟括号匹配的堆栈
+        index = [0] * (len(s) + 1) # 存储匹配的括号的长度
+
+        for i in range(len(s)):
+            if s[i] == '(': # 每一次只将左括号压入栈中
+                stack.append(i)
+            elif len(stack) != 0: # 如果碰到右括号且栈非空,表示有括号可以匹配
+                temp_index = stack.pop()
+                index[i + 1] = index[temp_index] + i - temp_index + 1 # 在本次括号匹配长度的基础之上加上最左边右括号匹配的长度
+
+        return max(index)
 
 if __name__ == '__main__':
     sol = Solution()
