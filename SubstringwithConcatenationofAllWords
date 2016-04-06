@@ -13,38 +13,11 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[int]
         """
-        '''
-        #Time Limit Exceeded
+
         if len(s) == 0 or len(words) == 0:
             return []
 
-        return_index = [] #保存符合要求的下标值
-        word_index = {} #存储每个单词起始位置的下标
-
-        for i in range(len(s)):
-            for j in range(len(words)):
-                if i + len(words[0]) <= len(s) and s[i : i + len(words[0])] == words[j]:
-                    word_index[i] = words[j]
-
-        #对字典中的每一项进行遍历,看是否有符合要求的值
-        for item in word_index.items():
-            first_index = item[0] #记录其始位置的下标
-            index = item[0] #记录当前的下标
-            word_list = [word_index[first_index]]
-
-            while word_index.has_key(index + len(words[0])):
-                word_list.append(word_index[index + len(words[0])])
-                index += len(words[0])
-                if word_list.sort() == words.sort():
-                    return_index.append(first_index)
-                    break
-
-        return return_index
-        '''
-        if len(s) == 0 or len(words) == 0:
-            return []
-
-        word_num = {} #存储words中每个单词出现的次数
+        word_num = {} #存储words中每个单词出现的次数,因为可能有重复元素出现
 
         for i in words:
             if word_num.has_key(i):
@@ -53,24 +26,50 @@ class Solution(object):
                 word_num[i] = 1
 
         return_index = [] #保存符合要求的下标值
-        for i in range(0, len(s) - len(words) * len(words[0])):
-            index = i #表示当前下标
-            temp_word_num = copy.deepcopy(word_num)
-            word_used_num = 0
+        word_len = len(words[0])
 
-            #如果当前单词出现在了words中,而且使用次数没有超过限制
-            while index + len(words[0]) < len(s) and temp_word_num.has_key(s[index : index + len(words[0])]) and temp_word_num[s[index : index + len(words[0])]] > 0:
-                temp_word_num[s[index : index + len(words[0])]] -= 1
-                word_used_num += 1
-                index += len(words[0])
+        for i in range(word_len): # 开始寻找字符串的位置较起始位置的偏移量,至多会有word_len - 1的偏移,之后便又是0了
+            left = i # left表示目标字符串的起始位置
+            count = 0
+            temp_word_num = {}
+            for j in range(i, len(s) - word_len + 1, word_len):
+                temp_str = s[j:j + word_len]
 
+                if temp_str in word_num: # 判断当前字符串是否在words中
+                    if temp_str in temp_word_num:
+                        temp_word_num[temp_str] += 1
+                    else:
+                        temp_word_num[temp_str] = 1
 
-            #如果找到了符合要求的下标
-            if word_used_num == len(words):
-                return_index.append(i)
+                    if temp_word_num[temp_str] <= word_num[temp_str]:
+                        count += 1
+                    else:
+                        # 如果当前字符串的使用次数超过限制,则将已经存储的字符串进行回退,直至不超过当前字符串的使用次数为止
+                        while temp_word_num[temp_str] > word_num[temp_str]:
+                            temp_temp_str = s[left:left + word_len]
+                            temp_word_num[temp_temp_str] -= 1
+                            # 如果不满足该if语句的条件,则代表temp_temp_str == temp_str,一旦不满足,则会跳出循环
+                            # 其实已经将这一次的使用计算上了
+                            if temp_word_num[temp_temp_str] < word_num[temp_temp_str]:
+                                count -= 1
+                            left += word_len
+
+                    if count == len(words):
+                        #如果已经找全了words中的值,则将起始位置行进到下一个字符子串的位置,将第一个字符子串删除
+                        return_index.append(left)
+                        temp_temp_str = s[left:left + word_len]
+                        temp_word_num[temp_temp_str] -= 1
+                        count -= 1
+                        left += word_len
+                else:
+                    # 如果当前的字符串不在words中,则行进到下一个位置继续搜索
+                    count = 0
+                    temp_word_num = {}
+                    left = j + word_len
 
         return return_index
 
 if __name__ == '__main__':
     sol = Solution()
-    print(sol.findSubstring("barfoothefoobarman",["foo", "bar"]))
+    print(sol.findSubstring("barfoothefoobarman",
+["foo","bar"]))
