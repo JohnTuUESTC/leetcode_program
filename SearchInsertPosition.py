@@ -13,23 +13,27 @@ class Solution(object):
 
         if len(nums) == 0:
             return 0
+        '''
+        first = 0
+        last = len(nums) - 1
 
-        #如果目标元素比第一个值都小
-        if nums[0] > target:
-            return 0
+        while first <= last:
+            mid = (first + last) / 2
 
-        #如果目标元素比第一个值都大
-        if nums[len(nums) - 1] < target:
-            return len(nums)
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] > target:
+                last = mid - 1
+            else:
+                first = mid + 1
 
-        for i in range(len(nums)):
-            #如果恰好找到了目标元素
-            if nums[i] == target:
-                return i
-            #如果恰好出现在某两个元素中间
-            elif i < len(nums) - 1 and nums[i] < target and nums[i + 1] > target:
-                return i + 1
+        return first
+        '''
+        index = 0
+        while index < len(nums) and nums[index] < target:
+            index += 1
+        return index
 
 if __name__ == "__main__":
     sol = Solution()
-    print(sol.searchInsert([1, 3, 5, 6], 0))
+    print(sol.searchInsert([1, 3, 5, 6], 3))
