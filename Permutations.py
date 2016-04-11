@@ -17,25 +17,60 @@ class Solution(object):
         if len(nums) == 1:
             return [nums]
 
-        curr = [] #存储当前的结果
+        '''
+        nums.sort()
+        curr = nums #存储当前的结果
         permutations = [] #存储所有可能的排列
+        permutations.append(curr)
 
-        self.find_permutations(nums, curr, permutations)
+        self.next_permutations(curr, permutations)
 
         return permutations
 
-    def find_permutations(self, nums, curr, permutations):
-        if len(nums) == 0 and curr not in permutations:
-            permutations.append(curr)
-            return
+    def next_permutations(self, temp_curr, permutations):
+        curr = copy.deepcopy(temp_curr)
+        # 寻找最后一个升序的位置
+        index = -1
+        for i in range(len(curr) - 1, 0, -1):
+            if curr[i - 1] < curr[i]:
+                index = i - 1
+                break
 
-        for i in range(len(nums)):
-            temp_nums = copy.deepcopy(nums)
-            temp_curr = copy.deepcopy(curr)
-            temp_curr.append(nums[i])
-            temp_nums = temp_nums[0:i] + temp_nums[i + 1:len(temp_nums)]
-            self.find_permutations(temp_nums, temp_curr, permutations)
+        if index != -1:
+            # 寻找最后一个比curr[index]大的元素
+            for i in range(len(curr) - 1, index, -1):
+                if curr[i] > curr[index]:
+                    temp = curr[index]
+                    curr[index] = curr[i]
+                    curr[i] = temp
+                    break
+
+            self.reverse_list(curr, index + 1, len(curr) - 1)
+            permutations.append(curr)
+            self.next_permutations(curr, permutations)
+
+    def reverse_list(self, curr_list, first, last):
+        while first < last:
+            temp = curr_list[first]
+            curr_list[first] = curr_list[last]
+            curr_list[last] = temp
+            first += 1
+            last -= 1
+    '''
+        permutations = [[nums[0]]]  # 存储所有可能的排列
+
+        for i in range(1, len(nums)):
+            temp_permutations = []
+            for j in range(len(permutations)):
+                for index in range(len(permutations[0]) + 1):
+                    temp_list = copy.deepcopy(permutations[j])
+                    temp_list.insert(index, nums[i])
+                    temp_permutations.append(temp_list)
+
+            permutations = temp_permutations
+
+        return permutations
 
 if __name__ == "__main__":
     sol = Solution()
-    print(sol.permute([1,1,2]))
+    print(sol.permute([0,-1,1]))
