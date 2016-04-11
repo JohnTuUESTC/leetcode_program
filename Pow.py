@@ -12,6 +12,7 @@ class Solution(object):
         :type n: int
         :rtype: float
         """
+
         if x == 0:
             return 0
 
@@ -19,6 +20,7 @@ class Solution(object):
             return 1
 
         negetive_flag = False
+        '''
         if x < 0 and n % 2 == 1:
             negetive_flag = True
 
@@ -50,6 +52,25 @@ class Solution(object):
 
         if negetive_flag:
             return -result
+        else:
+            return result
+        '''
+
+        if n < 0:
+            negetive_flag = True
+
+        n = abs(n)
+        result = 1
+
+        while n > 0:
+            if n & 1 == 1: # 表明n的最后一位是1
+                result *= x
+
+            n >>= 1
+            x *= x
+
+        if negetive_flag:
+            return 1 / float(result)
         else:
             return result
 
