@@ -18,61 +18,21 @@ class Solution(object):
         if len(intervals) == 0 or len(intervals) == 1:
             return intervals
 
-        #按区间的开始从大到小进行排序
-        self.sort_intervals(intervals, 0, len(intervals) - 1)
+        #按区间的起始从小到大进行排序
+        intervals = sorted(intervals, key=lambda x: x.start)
 
         result = []
         result.append(intervals[0])
 
         for j in range(1, len(intervals)):
             #判断两个区间是否有交集
-            if self.interval_overlapped(intervals[j], result[len(result) - 1]):
-                #将相交的区间进行合并
-                new_inter = self.merge_interval(intervals[j], result[len(result) - 1])
-                result.pop()
-                result.append(new_inter)
+            if intervals[j].start <= result[-1].end:
+                result[-1].end = max(intervals[j].end, result[-1].end)
             else:
                 result.append(intervals[j])
 
         return result
 
-    def sort_intervals(self, intervals, start, end):
-        if start >= end:
-            return
-
-        target = intervals[end]
-
-        j = start - 1
-        i = start
-
-        while i < end:
-            if intervals[i].start < target.start:
-                j += 1
-                temp = intervals[i]
-                intervals[i] = intervals[j]
-                intervals[j] = temp
-            i += 1
-
-        j += 1
-        intervals[end] = intervals[j]
-        intervals[j] = target
-        self.sort_intervals(intervals, 0, j - 1)
-        self.sort_intervals(intervals, j + 1, end)
-
-    def interval_overlapped(self, interval_1, interval_2):
-        if interval_1.start > interval_2.start:
-            return self.interval_overlapped(interval_2, interval_1)
-
-        if interval_1.start <= interval_2.start <= interval_1.end:
-            return True
-
-    def merge_interval(self, interval_1, interval_2):
-        new_interval = Interval()
-
-        new_interval.start = min(interval_1.start, interval_2.start)
-        new_interval.end = max(interval_1.end, interval_2.end)
-
-        return new_interval
 
 if __name__ == "__main__":
     interval = []
