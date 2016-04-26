@@ -13,37 +13,34 @@ class Solution(object):
         if len(digits) == 0:
             return [1]
 
-        result = [] #保存返回的结果
-        for i in range(len(digits)):
-            result.append(0)
-
         jinwei = 0 #表示是否有进位发生
 
         #对digits进行加1操作
-        if digits[len(digits) - 1] + 1 > 9:
+        if digits[-1] + 1 == 10:
+            digits[-1] = 0
             jinwei = 1
-            result[len(digits) - 1] = (digits[len(digits) - 1] + 1) % 10
 
-            #将进位的结果逐步向高位推进
-            for i in range(len(digits) - 2, -1, -1):
-                if jinwei == 1:
-                    if digits[i] + 1 > 9:
-                        result[i] = (digits[i] + 1) % 10
-                    else:
-                        result[i] = digits[i] + 1
-                        jinwei = 0
-                else:
-                    result[i] = digits[i]
+            index = len(digits) - 2
+            while index >= 0:
+                if jinwei == 1 and digits[index] + 1 == 10:
+                    digits[index] = 0
+                elif jinwei == 1 and digits[index] + 1 < 10:
+                    digits[index] += 1
+                    jinwei = 0
+                    break
+                elif jinwei == 0:
+                    break
 
-            if jinwei == 1:
-                result = [1] + result
+                index -= 1
+
+            #如果最高位有进位
+            if index == -1 and jinwei == 1:
+                digits[0] = 0
+                digits = [1] + digits
         else:
-            result[len(digits) - 1] = digits[len(digits) - 1] + 1
-            for i in range(len(digits) - 2, -1, -1):
-                result[i] = digits[i]
+            digits[-1] += 1
 
-
-        return result
+        return digits
 
 if __name__ == "__main__":
     sol = Solution()
