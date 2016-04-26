@@ -10,35 +10,25 @@ class Solution(object):
         :rtype: int
         """
         '''
-        TLE,可用二分搜索
-        if x <= 0:
-            return x
+        if x == 0:
+            return 0
+        elif x < 4:
+            return 1
 
-        first = 0
-        last = 1
+        result = 2 * self.mySqrt(x / 4)
 
-        while True:
-            if 1 << first <= x <= 1 << last:
-                break
+        if (result + 1) ** 2 <= x:
+            return result + 1
 
-            first += 1
-            last += 1
-
-        temp_1 = 1 << (first / 2)
-        temp_2 = 1 << (last / 2)
-
-        for i in range(temp_1, temp_2):
-            result_1 = i ** 2
-            result_2 = (i + 1) ** 2
-
-            if result_1 == x:
-                return i
-            elif result_1 < x < result_2:
-                return i
-            elif result_2 == x:
-                return i + 1
+        return result
         '''
-
+        # 牛顿法
+        y = 1
+        n = x
+        while n > y:
+            n = y + (n - y) / 2
+            y = x / n
+        return n
 
 if __name__ == "__main__":
     sol = Solution()
