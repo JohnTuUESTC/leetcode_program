@@ -10,59 +10,60 @@ class Solution(object):
         :type path: str
         :rtype: str
         """
+        '''
+        index = 1  # 表示当前扫描的位置
+        file_stack = []  # 记录文件路径的信息
 
-        first = 1 #表示当前扫描的位置
-        file_stack = [] #记录文件路径的信息
-        stack_index = -1 #记录栈头指针的位置
-
-        while(first < len(path)):
-            length = 0 #记录单词的长度
-
-            #如果是字符'/'，则跳过
-            if path[first] == '/':
-                first += 1
+        while index < len(path):
+            # 如果是字符'/'，则跳过
+            if path[index] == '/':
+                index += 1
                 continue
 
-            #如果出现一个点的情况
-            if path[first] == '.':
-                if first + 2 < len(path) and path[first + 1] == '.' and path[first + 2] == '.':
-                    None
-                elif first + 2 < len(path) and path[first + 1] == '.' and path[first + 2] != '/':
-                    None
-                #如果出现返回上一级目录的情况
-                elif first + 1 < len(path) and path[first + 1] == '.':
-                    first += 2
-                    #对特殊情况的处理
-                    if stack_index >= 0:
-                        stack_index -= 1
-                        file_stack.pop()
-                    continue
-                elif first + 1 < len(path) and path[first + 1] != '/':
-                    None
-                #如果只是在当前目录的情况
-                else:
-                    first += 1
-                    continue
+            # 如果是当前目录的符号
+            if index + 1 < len(path) and path[index] == '.' and path[index + 1] == '/':
+                index += 2
+                continue
+            elif index == len(path) - 1 and path[index] == '.':
+                break
 
-            while (('A' <= path[first + length] <= 'Z' or 'a' <= path[first + length] <= 'z' or '0' <= path[first + length] <= '9' or path[first + length] == '.'  or path[first + length] == '_') and first + length + 1 < len(path)):
+            # 如果是返回上一级目录的符号
+            if index + 2 < len(path) and path[index] == '.' and path[index + 1] == '.' and path[index + 2] == '/':
+                index += 3
+                if len(file_stack) > 0:
+                    file_stack.pop()
+                continue
+            elif index == len(path) - 2 and path[index] == '.' and path[index + 1] == '.':
+                if len(file_stack) > 0:
+                    file_stack.pop()
+                break
+
+            #获取文件夹名的长度
+            length = 1
+            while index + length < len(path):
+                if path[index + length] == '/':
+                    break
                 length += 1
 
-            if(('A' <= path[first + length] <= 'Z' or 'a' <= path[first + length] <= 'z' or '0' <= path[first + length] <= '9' or path[first + length] == '.' or path[first + length] == '_') and first + length + 1 == len(path)):
-                length += 1
+            file_stack.append(path[index:index+length])
+            index += length
 
-            stack_index += 1
-            file_stack.append(path[first : first + length])
-            first += length
+        return '/' + '/'.join(file_stack)
+        '''
 
-        #拼凑成文件路径
-        file_path = ''
-        if stack_index == -1:
-            return '/'
-        while stack_index != -1:
-            file_path = '/' + file_stack[stack_index] + file_path
-            stack_index -= 1
+        file_stack = []  # 记录文件路径的信息
 
-        return file_path
+        file = [i for i in path.split('/') if i != '.' and i != ''] # 以'/'作为分隔符,除去当前目录的符号
+
+        for file_name in file:
+            if file_name == '..':
+                if len(file_stack) > 0:
+                    file_stack.pop()
+            else:
+                file_stack.append(file_name)
+
+        return '/' + '/'.join(file_stack)
+
 
 if __name__ == '__main__':
     sol = Solution()
