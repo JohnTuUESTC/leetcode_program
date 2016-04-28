@@ -23,6 +23,7 @@ class Solution(object):
         return result
         '''
         # 牛顿法
+        # 求解方程 f(x) = x^2 - n
         y = 1
         n = x
         while n > y:
