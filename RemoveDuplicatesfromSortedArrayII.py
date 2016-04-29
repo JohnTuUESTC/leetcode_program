@@ -10,35 +10,31 @@ class Solution(object):
         :rtype: int
         """
 
-        if len(nums) <= 2:
-            return len(nums)
-
         first = 0
         last = 1
 
-        length = len(nums)
-        dul_element = 0 # 重复元素的个数
+        length = 0 # 返回列表的长度
         duplicated = False # 表示当前是否有重复元素
 
-        while last < len(nums) - dul_element:
-            if nums[first] == nums[last]:
-                # 表示当前有元素重复
+        while last < len(nums) - length:
+            if nums[first] == nums[last + length]: # 表示当前已出现了重复的元素
                 if duplicated:
-                    while last < len(nums) - dul_element and nums[last] == nums[first]:
-                        dul_element += 1
-                        for i in range(last, len(nums) - dul_element):
-                            nums[i] = nums[i + 1]
-                        duplicated = False
+                    length += 1
                 else:
+                    # 如果只出现了一个重复的元素
                     duplicated = True
+                    nums[last] = nums[last + length]
+                    first += 1
+                    last += 1
 
             else:
                 duplicated = False
+                # 将不重复的元素复制到前面
+                nums[last] = nums[last + length]
+                first += 1
+                last += 1
 
-            first = last
-            last += 1
-
-        return length - dul_element
+        return len(nums) - length
 
 if __name__ == "__main__":
     sol = Solution()
