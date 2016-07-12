@@ -16,7 +16,7 @@ class Solution(object):
         :type n: int
         :rtype: ListNode
         """
-
+        '''
         #如果是空链表的话，直接返回
         if not head:
             return head
@@ -49,6 +49,47 @@ class Solution(object):
             temp_head = temp_head.next
 
         return head
+        '''
+
+        if not head or n == 0:
+            return None
+
+        if n == 1: # 如果要删除的是尾结点
+            if not head.next: # 如果链表中只有一个结点
+                return None
+
+            p_first = head.next
+            p_last = head
+
+            while p_first.next:
+                p_first = p_first.next
+                p_last = p_last.next
+
+            p_last.next = None
+
+            return head
+        else:
+            p_first = head
+
+            for i in range(n - 1): # 让一个指针先走n - 1步
+                if p_first.next:
+                    p_first = p_first.next
+                else:
+                    return None # 表示该链表中并没有n个结点
+
+            p_last = head
+
+            while p_first.next: # 当p_first到达尾结点时,p_last到达倒数第n个结点
+                p_first = p_first.next
+                p_last = p_last.next
+
+            # 删除倒数第n个结点
+            next_node = p_last.next
+            p_last.val = next_node.val
+            p_last.next = next_node.next
+
+            return head
+
 
 if __name__ == "__main__":
     sol = Solution()
@@ -61,7 +102,7 @@ if __name__ == "__main__":
     temp_l = temp_l.next
     temp_l.next = ListNode(5)
 
-    l1 = sol.removeNthFromEnd(l, 2)
+    l1 = sol.removeNthFromEnd(l, 1)
 
     while l1:
         print(l1.val)
