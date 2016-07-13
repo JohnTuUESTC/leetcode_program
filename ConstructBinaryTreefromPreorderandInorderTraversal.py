@@ -48,8 +48,9 @@ class Solution(object):
         # 在中序遍历中寻找到根节点所在的位置
         root_index = inorder.index(root_value)
 
-        # 分别构建左右子树
-        root.left = self.buildTree(preorder, inorder[:root_index]) # 这里有可能root_index为-1
+        # 一定要注意到子树的构建顺序,因为pop是一个不可逆的过程,所以一定是先建立左子树
+        # 如果先建立右子树的话,index函数会出错,因为找不到相应根节点的位置
+        root.left = self.buildTree(preorder, inorder[:root_index])
         root.right = self.buildTree(preorder, inorder[root_index + 1:])
 
         return root
