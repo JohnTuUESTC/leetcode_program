@@ -59,9 +59,9 @@ class Solution(object):
     '''
         permutations = [[nums[0]]]  # 存储所有可能的排列
 
-        for i in range(1, len(nums)):
+        for i in range(1, len(nums)): # 按元素的顺序依次插入
             temp_permutations = []
-            for j in range(len(permutations)):
+            for j in range(len(permutations)): # 为已有排列的所有可能位置都插入新元素
                 for index in range(len(permutations[0]) + 1): # 在已有的排列中,有比其元素个数多1的空位可供插入新的元素
                     temp_list = copy.deepcopy(permutations[j])
                     temp_list.insert(index, nums[i])
