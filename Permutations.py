@@ -62,7 +62,7 @@ class Solution(object):
         for i in range(1, len(nums)):
             temp_permutations = []
             for j in range(len(permutations)):
-                for index in range(len(permutations[0]) + 1):
+                for index in range(len(permutations[0]) + 1): # 在已有的排列中,有比其元素个数多1的空位可供插入新的元素
                     temp_list = copy.deepcopy(permutations[j])
                     temp_list.insert(index, nums[i])
                     temp_permutations.append(temp_list)
